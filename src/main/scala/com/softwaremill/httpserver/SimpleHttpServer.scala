@@ -11,7 +11,13 @@ object SimpleHttpServer {
     val server = HttpServer.create(new InetSocketAddress(8000), 0)
     server.createContext("/", new RootHandler())
     server.setExecutor(null)
+
     server.start()
+
+    println("Hit any key to exit...")
+
+    System.in.read()
+    server.stop(0)
   }
 
 }
@@ -19,14 +25,18 @@ object SimpleHttpServer {
 class RootHandler extends HttpHandler {
 
   def handle(t: HttpExchange) {
+    displayPayload(t.getRequestBody)
+    sendResponse(t)
+  }
 
-    copyStream(t.getRequestBody, System.out)
-
-    val response = "Ack!"
-    t.sendResponseHeaders(200, response.length())
-    val os = t.getResponseBody
-    os.write(response.getBytes)
-    os.close()
+  private def displayPayload(body: InputStream): Unit ={
+    println()
+    println("******************** REQUEST START ********************")
+    println()
+    copyStream(body, System.out)
+    println()
+    println("********************* REQUEST END *********************")
+    println()
   }
 
   private def copyStream(in: InputStream, out: OutputStream) {
@@ -34,6 +44,14 @@ class RootHandler extends HttpHandler {
       .continually(in.read)
       .takeWhile(-1 !=)
       .foreach(out.write)
+  }
+
+  private def sendResponse(t: HttpExchange) {
+    val response = "Ack!"
+    t.sendResponseHeaders(200, response.length())
+    val os = t.getResponseBody
+    os.write(response.getBytes)
+    os.close()
   }
 
 }
