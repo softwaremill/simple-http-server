@@ -1,6 +1,8 @@
 Simple HTTP Server
 ==================
 
+[![Build Status](https://travis-ci.org/softwaremill/simple-http-server.svg)](https://travis-ci.org/softwaremill/simple-http-server)
+
 This is very simple JVM based HTTP server with no dependencies - just pure JVM is needed. It was developed
 to support development process of the [Codebrag](http://www.codebrag.com) project.
 
